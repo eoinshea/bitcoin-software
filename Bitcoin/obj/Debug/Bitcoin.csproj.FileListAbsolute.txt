@@ -1,0 +1,7 @@
+c:\users\eoin's\documents\visual studio 2010\Projects\Bitcoin\Bitcoin\bin\Bitcoin.dll
+c:\users\eoin's\documents\visual studio 2010\Projects\Bitcoin\Bitcoin\bin\Bitcoin.pdb
+c:\users\eoin's\documents\visual studio 2010\Projects\Bitcoin\Bitcoin\obj\Debug\ResolveAssemblyReference.cache
+c:\users\eoin's\documents\visual studio 2010\Projects\Bitcoin\Bitcoin\obj\Debug\Bitcoin.dll
+c:\users\eoin's\documents\visual studio 2010\Projects\Bitcoin\Bitcoin\obj\Debug\Bitcoin.pdb
+c:\users\eoin's\documents\visual studio 2010\Projects\Bitcoin\Bitcoin\bin\Newtonsoft.Json.dll
+c:\users\eoin's\documents\visual studio 2010\Projects\Bitcoin\Bitcoin\bin\Newtonsoft.Json.xml

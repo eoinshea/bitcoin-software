@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Bitcoin.Models.Ticker>
+
+@{
+    ViewBag.Title = "Ticker";
+}
+
+<h2>Ticker</h2>
+
+<table>
+    <tr>
+        <th>
+            volume
+        </th>
+        <th>
+            last
+        </th>
+        <th>
+            bid
+        </th>
+        <th>
+            high
+        </th>
+        <th>
+            low
+        </th>
+        <th>
+            ask
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.volume)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.last)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.bid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.high)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.low)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ask)
+        </td>
+    </tr>
+}
+
+</table>
+<div class = "derp" >
+<p> @Html.TextBox("ViewDataTest", ViewData["ViewDataTest"])</p>
+<p> @Html.TextBox("DBTest",ViewData["DBStatus"])</p>
+</div>
+

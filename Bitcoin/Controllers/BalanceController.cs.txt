@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
+using System.Net;
+using Bitcoin.Models;
+
+namespace Bitcoin.Controllers
+{
+    public class BalanceController : Controller
+    {
+       
+
+        public ActionResult Index()
+        {
+            System.Net.WebClient client = new WebClient();
+            
+
+           ViewData["Test"] = "not started";
+
+          //  var rawTicker = JsonConvert.DeserializeObject<RawTicker>(Json);
+
+           var userAccount = new BitcoinAccount { user = "35531", password = "gYu3gltI8Od2" };
+            userAccount.user = "35531";
+            userAccount.password = "gYu3gltI8Od2";
+
+            var testString = "{'user':'35531','password':'gYu3gltI8Od2'}";
+
+            var JsonUpload = JsonConvert.SerializeObject(userAccount);
+
+            try
+            {
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                Console.WriteLine(JsonUpload);
+                var JsonDownload = client.UploadString("https://www.bitstamp.net/api/balance/", JsonUpload);
+                ViewData["Balance"] = JsonDownload;
+                ViewData["Test"] = JsonUpload;
+            }
+            catch (Exception ex)
+                {
+                    ViewData["Test"] = ex.ToString();
+                    ViewData["Balance"] = "failed";
+                }
+
+            
+
+            return View();
+        }
+
+
+        public void getAccountBalance_Bitstamp()
+        {
+
+
+
+            ViewData["ViewDataTest"] = "Hello from Markets Controller";
+        }
+    }
+}

@@ -1,0 +1,171 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Bitcoin.Models;
+using System.Net;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
+using System.Data.SqlClient;
+using System.Configuration;
+
+namespace Bitcoin.Controllers
+{
+    public class MarketsController : Controller
+    {
+        //
+        // GET: /Markets/
+
+        //database 
+        //BitcoinDB db 
+
+        public ActionResult Index()
+        {
+
+
+            return View();
+        }
+
+
+        //Ticker 
+        public ActionResult Ticker()
+        {
+
+         //   string connectionString = "Data Source=.\SQLEXPRESS;AttachDbFilename =\App_Data\BitcoinDB.mdf;Integrated Security=True; User Instance=True";
+
+
+            List<Ticker> tickerList = new List<Ticker>();
+
+            System.Net.WebClient client = new WebClient();
+            string Json = client.DownloadString("https://www.bitstamp.net/api/ticker/");
+
+            var rawTicker = JsonConvert.DeserializeObject<RawTicker>(Json);
+
+            //add converted ticker to ticker list
+            tickerList.Add(ConvertTicker(rawTicker));
+
+            InsertTickerIntoDB(tickerList[0]);
+
+            return View(tickerList);
+        }
+
+
+        public void getAccountBalance_Bitstamp()
+        {
+
+        }
+
+
+        public double GetBalance_Bitstamp()
+        {
+
+            return 0.01;
+        }
+
+
+        //public class BuyLimitOrder_Bitstamp(int id, string password, 
+
+        //public class void SellLimitOrder_Bitstamp(int id, string password,)
+        //{
+        //}
+
+
+        //Convert ticker string data object to double object so data can be used
+        public Ticker ConvertTicker(RawTicker rawTicker)
+        {
+            var ticker = new Ticker();
+
+            ticker.volume = double.Parse(rawTicker.volume);
+            ticker.last = double.Parse(rawTicker.last);
+            ticker.bid = double.Parse(rawTicker.bid);
+            ticker.high = double.Parse(rawTicker.high);
+            ticker.low = double.Parse(rawTicker.low);
+            ticker.ask = double.Parse(rawTicker.ask);
+
+            return ticker;
+        }
+
+
+        //Insert a ticker value into the ticker table 
+        public void InsertTickerIntoDB(Ticker ticker)
+        {
+            SqlConnection oConn = new SqlConnection(ConfigurationManager.ConnectionStrings["myConn"].ConnectionString);
+            string queryString =
+            "INSERT into dbo.ticker(volume,last,bid,high,low,ask,date) values (@volumeno,@lastno,@bidno,@highno,@lowno,@askno,@dateno)";
+
+
+
+            ViewData["ViewDataTest"] = "Hello from Markets Controller";
+            using (oConn)
+            {
+                // Create the Command and Parameter objects.
+                SqlCommand command = new SqlCommand(queryString, oConn);
+
+                // Open the connection in a try/catch block.
+                // Create and execute the DataReader, writing the result
+                // set to the console window.
+                try
+                {
+                    oConn.Open();
+                    command.Parameters.AddWithValue("@volumeno", ticker.volume);
+                    command.Parameters.AddWithValue("@lastno", ticker.last);
+                    command.Parameters.AddWithValue("@bidno", ticker.bid);
+                    command.Parameters.AddWithValue("@highno", ticker.high);
+                    command.Parameters.AddWithValue("@lowno", ticker.low);
+                    command.Parameters.AddWithValue("@askno", ticker.ask);
+                    command.Parameters.AddWithValue("@dateno", DateTime.Now);
+                    command.ExecuteNonQuery();
+                    command.Dispose();
+                    command = null;
+
+                }
+                catch (Exception ex)
+                {
+                    ViewData["DBStatus"] = ex.ToString();
+                }
+            }
+        }
+
+        //get ticker by id
+        public Ticker getTickerFrmoTable(int id)
+        {
+            Ticker ticker = new Ticker();
+            SqlConnection oConn = new SqlConnection(ConfigurationManager.ConnectionStrings["myConn"].ConnectionString);
+            string queryString =
+            "SELECT * from dbo.Ticker";
+
+            ViewData["ViewDataTest"] = "Hello from Markets Controller";
+            using (oConn)
+            {
+                // Create the Command and Parameter objects.
+                SqlCommand command = new SqlCommand(queryString, oConn);
+
+                // Open the connection in a try/catch block.
+                // Create and execute the DataReader, writing the result
+                // set to the console window.
+                try
+                {
+                    oConn.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine("\t{0}",
+                        reader[0]);
+                        ViewData["DBStatus"] = reader[0];
+                    }
+                    reader.Close();
+
+                }
+
+                catch (Exception ex)
+                {
+                    ViewData["DBStatus"] = "Connection Exception";
+                }
+            }
+            return ticker;
+        }
+
+
+    }
+}
